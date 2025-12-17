@@ -17,5 +17,6 @@ void initGameModule() {
   
 
   // Cubit / Provider
-  gi.registerLazySingleton<GameCubit>(() => GameCubit(gi()));
+  gi.registerLazySingleton<GameCubit>(() => GameCubit(gi(), gi()));
+  
 }

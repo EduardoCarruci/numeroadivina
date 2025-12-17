@@ -71,113 +71,122 @@ class _GameView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: BlocConsumer<GameCubit, GameState>(
+              listenWhen: (prev, cur) =>
+                  prev.status != cur.status &&
+                  cur.status == GameStatus.finished,
               listener: (context, state) async {
-            if (state.game == null) return;
-          }, builder: (context, state) {
-            final game = state.game;
-            if (game == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
+                if (state.game == null) return;
 
-            final attemptsLeft = game.maxAttempts - game.attemptsUsed;
+                //CALL DIALOG FOR FINISHED GAME
+              },
+              builder: (context, state) {
+                final game = state.game;
+                if (game == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Top row: input left, attempts right
-                  Row(
+                final attemptsLeft = game.maxAttempts - game.attemptsUsed;
+
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      InputNumberWidget(
-                          controller: controller,
-                          formKey: formKey,
-                          submitGuess: _submitGuess,
-                          game: game),
-                      Spaces.kSizedBoxWidth8,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      // Top row: input left, attempts right
+                      Row(
                         children: [
-                          const Text('Intentos',
-                              style: TextStyle(color: AppColors.white)),
-                          Text('$attemptsLeft',
-                              style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: AppTextStyles.k18Style.fontSize)),
+                          InputNumberWidget(
+                              controller: controller,
+                              formKey: formKey,
+                              submitGuess: _submitGuess,
+                              game: game),
+                          Spaces.kSizedBoxWidth8,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text('Intentos',
+                                  style: TextStyle(color: AppColors.white)),
+                              Text('$attemptsLeft',
+                                  style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize:
+                                          AppTextStyles.k18Style.fontSize)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Spaces.kSizedBoxHeight16,
+
+                      // Three columns
+                      SizedBox(
+                        height: 300,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: BuildBoxColumn(
+                                    title: 'Mayor que',
+                                    items: game.higherGuesses
+                                        .map((e) => e.toString())
+                                        .toList())),
+                            Spaces.kSizedBoxWidth8,
+                            Expanded(
+                                child: BuildBoxColumn(
+                                    title: 'Menor que',
+                                    items: game.lowerGuesses
+                                        .map((e) => e.toString())
+                                        .toList())),
+                            Spaces.kSizedBoxWidth8,
+                            Expanded(
+                                child: BuildHistoryBox(history: game.history)),
+                          ],
+                        ),
+                      ),
+
+                      Spaces.kSizedBoxHeight16,
+
+                      // Slider
+                      Column(
+                        children: [
+                          SliderLevel(
+                              cubit: cubit, difficulties: _difficulties),
+                          Text(
+                              _difficulties[state.selectedDifficultyIndex]
+                                  .name
+                                  .toUpperCase(),
+                              style: const TextStyle(color: Colors.white70)),
+                        ],
+                      ),
+
+                      Spaces.kSizedBoxHeight8,
+
+                      // Submit button and finished message
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed:
+                                  game.isFinished ? null : () => _submitGuess(),
+                              child: Text('Probar',
+                                  style: TextStyle(
+                                      color: game.isFinished
+                                          ? Colors.white38
+                                          : AppColors.primary)),
+                            ),
+                          ),
+                          Spaces.kSizedBoxWidth8,
+                          if (state.status == GameStatus.finished)
+                            ElevatedButton(
+                              onPressed: () => cubit.reset(),
+                              child: const Text(
+                                "Reiniciar",
+                                style: TextStyle(color: AppColors.primary),
+                              ),
+                            ),
                         ],
                       ),
                     ],
                   ),
-                  Spaces.kSizedBoxHeight16,
-
-                  // Three columns
-                  SizedBox(
-                    height: 300,
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: BuildBoxColumn(
-                                title: 'Mayor que',
-                                items: game.higherGuesses
-                                    .map((e) => e.toString())
-                                    .toList())),
-                        Spaces.kSizedBoxWidth8,
-                        Expanded(
-                            child: BuildBoxColumn(
-                                title: 'Menor que',
-                                items: game.lowerGuesses
-                                    .map((e) => e.toString())
-                                    .toList())),
-                        Spaces.kSizedBoxWidth8,
-                        Expanded(child: BuildHistoryBox(history: game.history)),
-                      ],
-                    ),
-                  ),
-
-                  Spaces.kSizedBoxHeight16,
-
-                  // Slider
-                  Column(
-                    children: [
-                      SliderLevel(cubit: cubit, difficulties: _difficulties),
-                      Text(
-                          _difficulties[state.selectedDifficultyIndex]
-                              .name
-                              .toUpperCase(),
-                          style: const TextStyle(color: Colors.white70)),
-                    ],
-                  ),
-
-                  Spaces.kSizedBoxHeight8,
-
-                  // Submit button and finished message
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed:
-                              game.isFinished ? null : () => _submitGuess(),
-                          child: Text('Probar',
-                              style: TextStyle(
-                                  color: game.isFinished
-                                      ? Colors.white38
-                                      : AppColors.primary)),
-                        ),
-                      ),
-                      Spaces.kSizedBoxWidth8,
-                      if (state.status == GameStatus.finished)
-                        ElevatedButton(
-                          onPressed: () => cubit.reset(),
-                          child: const Text(
-                            "Reiniciar",
-                            style: TextStyle(color: AppColors.primary),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }),
+                );
+              }),
         ),
       ),
     );
