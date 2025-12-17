@@ -18,7 +18,7 @@ final appRouter = GoRouter(
     GoRoute(
       name: GamePage.id,
       path: GamePage.id,
-      builder: (_, __) => const GamePage(),
+      builder: (_, __) =>  GamePage(),
     ),
   ],
   errorBuilder: (_, __) => const Scaffold(
