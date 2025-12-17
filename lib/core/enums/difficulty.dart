@@ -16,6 +16,8 @@ extension DifficultyConfig on Difficulty {
         return 100;
       case Difficulty.extremo:
         return 1000;
+      default:
+        return 10;
     }
   }
 
@@ -29,6 +31,23 @@ extension DifficultyConfig on Difficulty {
         return 15;
       case Difficulty.extremo:
         return 25;
+      default:
+        return 5;
+    }
+  }
+
+  int get digits {
+    switch (this) {
+      case Difficulty.facil:
+        return 1;
+      case Difficulty.medio || Difficulty.avanzado:
+        return 2;
+
+      case Difficulty.extremo:
+        return 4;
+
+      default:
+        return 1;
     }
   }
 }
