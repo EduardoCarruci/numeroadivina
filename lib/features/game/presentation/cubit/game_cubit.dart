@@ -27,7 +27,12 @@ final class GameCubit extends Cubit<GameState> {
 
   void startGame(Difficulty difficulty) {
     final game = _startGameUseCase(difficulty);
-    emit(state.copyWith(status: GameStatus.started, game: game, message: null));
+    emit(state.copyWith(
+      status: GameStatus.started,
+      game: game,
+      message: null,
+      selectedDifficultyIndex: difficulty.index,
+    ));
   }
 
   void makeGuess(int value) {

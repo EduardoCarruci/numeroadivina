@@ -6,6 +6,7 @@ import 'package:numeroadivina/core/enums/difficulty.dart';
 
 import 'package:numeroadivina/features/game/presentation/cubit/game_cubit.dart';
 import 'package:numeroadivina/features/game/presentation/cubit/game_state.dart';
+import 'package:numeroadivina/features/game/presentation/dialog/game_finished_dialog.dart';
 import 'package:numeroadivina/features/game/presentation/widgets/build_box_column_widget.dart';
 import 'package:numeroadivina/features/game/presentation/widgets/build_store_box_widget.dart';
 import 'package:numeroadivina/features/game/presentation/widgets/input_number_widget.dart';
@@ -77,7 +78,12 @@ class _GameView extends StatelessWidget {
               listener: (context, state) async {
                 if (state.game == null) return;
 
-                //CALL DIALOG FOR FINISHED GAME
+                await showDialog<void>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      GameFinishedDialog(game: state.game!, cubit: cubit),
+                );
               },
               builder: (context, state) {
                 final game = state.game;
