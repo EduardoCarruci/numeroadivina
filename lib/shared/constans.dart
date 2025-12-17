@@ -18,7 +18,9 @@ final class AppImages {
   const AppImages._();
 
   static final logo = Image.asset('assets/icon/icon.png');
-
+  //GIF DE DIALOGOS DE FIN DE JUEGO
+  static const gifWin = 'assets/images/win.gif';
+  static const gifLose = 'assets/images/lose.gif';
 }
 
 
