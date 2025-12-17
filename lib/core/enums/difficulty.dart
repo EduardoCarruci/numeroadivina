@@ -38,16 +38,16 @@ extension DifficultyConfig on Difficulty {
 
   int get digits {
     switch (this) {
-      case Difficulty.facil:
-        return 1;
-      case Difficulty.medio || Difficulty.avanzado:
+      case Difficulty.facil || Difficulty.medio:
         return 2;
+      case Difficulty.avanzado:
+        return 3;
 
       case Difficulty.extremo:
         return 4;
 
       default:
-        return 1;
+        return 2;
     }
   }
 }
