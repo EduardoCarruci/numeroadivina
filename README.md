@@ -1,16 +1,19 @@
-# numeroadivina
+## Arquitectura
 
-A new Flutter project.
+El proyecto implementa Clean Architecture separando claramente las capas de presentación,
+dominio y datos. 
 
-## Getting Started
+* La capa de presentación utiliza Cubit para la gestión de estado y consume
+únicamente casos de uso. 
 
-This project is a starting point for a Flutter application.
+* El dominio contiene entidades y reglas de negocio independientes
+de Flutter.
 
-A few resources to get you started if this is your first Flutter project:
+* La capa de datos implementa los repositorios mediante datasources remotos y
+locales.  (En este caso no se utiliza ya que no se consume ningun servicio de alguna API).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* La inyección de dependencias desacopla las capas y facilita escalabilidad y testing.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Versión de Flutter
+
+3.16.5
